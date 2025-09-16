@@ -18,7 +18,7 @@ const app = express();
 
 // Security & parsing
 app.use(helmet());
-app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
+app.use(cors({ origin: "*", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -41,5 +41,11 @@ app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 // 404 + error
 app.use(notFound);
 app.use(errorHandler);
+
+const allowedOrigins = ["http://localhost:3000", "http://localhost:4000"];
+
+
+app.use(express.json());
+
 
 export default app;

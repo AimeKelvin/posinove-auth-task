@@ -10,7 +10,7 @@ const env = {
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET ?? 'change_me_refresh',
   REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN ?? '7d',
   COOKIE_SECURE: (process.env.COOKIE_SECURE ?? 'false') === 'true',
-  CORS_ORIGIN: process.env.CORS_ORIGIN ?? 'http://localhost:4000',
+  CORS_ORIGIN: process.env.CORS_ORIGIN ?? 'http://localhost:3000',
   LOG_LEVEL: process.env.LOG_LEVEL ?? 'info'
 };
 
