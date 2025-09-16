@@ -1,0 +1,69 @@
+openapi: 3.0.3
+info:
+  title: Posinove Auth API
+  version: 1.0.0
+  description: Basic JWT authentication API (register, login, logout, protected routes)
+servers:
+  - url: http://localhost:4000/api/v1
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name: { type: string, example: Jane Doe }
+                email: { type: string, example: jane@example.com }
+                password: { type: string, example: "StrongP@ssw0rd!" }
+      responses:
+        "201":
+          description: Created
+  /auth/login:
+    post:
+      summary: Login and receive JWT (also set as HttpOnly cookie)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, example: jane@example.com }
+                password: { type: string, example: "StrongP@ssw0rd!" }
+      responses:
+        "200":
+          description: OK
+  /auth/logout:
+    post:
+      summary: Logout (clear cookies)
+      responses:
+        "200":
+          description: OK
+  /users/me:
+    get:
+      summary: Get current user (protected)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+  /users/dashboard:
+    get:
+      summary: Sample protected endpoint
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: OK
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

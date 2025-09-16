@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  mongo:
+    image: mongo:7
+    container_name: posinove-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./docker-data/mongo:/data/db
+  api:
+    build: .
+    container_name: posinove-auth-api
+    depends_on:
+      - mongo
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: mongodb://mongo:27017/posinove_auth
+      CORS_ORIGIN: http://localhost:4000
+    restart: unless-stopped
