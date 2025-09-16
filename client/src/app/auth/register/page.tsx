@@ -29,8 +29,14 @@ export default function RegisterPage() {
       router.push("/auth/login"); // ✅ redirect to login page
     } catch (err: unknown) {
       console.error("❌ Registration error:", err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
+
+      if (err instanceof Error) {
+        const axiosErr = err as { response?: { data?: { message?: string } } };
+        if (axiosErr.response?.data?.message) {
+          setError(axiosErr.response.data.message);
+        } else {
+          setError(err.message);
+        }
       } else {
         setError("Registration failed. Please try again.");
       }
@@ -38,7 +44,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-h-screen flex items-center justify-center px-4 ">
+    <div className="h-screen flex items-center justify-center px-4">
       <Card className="w-full max-w-sm p-8 shadow-sm border border-gray-200">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>

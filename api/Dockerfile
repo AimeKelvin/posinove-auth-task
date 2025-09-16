@@ -2,9 +2,9 @@ FROM node:20-alpine AS base
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Install deps
+# Install deps with legacy peer deps (ignores eslint peer conflicts)
 COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
-RUN npm ci --omit=dev || npm ci
+RUN npm ci --omit=dev --legacy-peer-deps || npm ci --legacy-peer-deps
 
 # Copy source
 COPY tsconfig.json ./

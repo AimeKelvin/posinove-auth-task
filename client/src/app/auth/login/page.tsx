@@ -25,11 +25,17 @@ export default function LoginPage() {
     try {
       setError(null);
       await login(email, password);
-      router.push("/dashboard"); // ✅ redirect to homepage
+      router.push("/dashboard"); // ✅ redirect to dashboard
     } catch (err: unknown) {
       console.error("❌ Login error:", err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
+
+      if (err instanceof Error) {
+        const axiosErr = err as { response?: { data?: { message?: string } } };
+        if (axiosErr.response?.data?.message) {
+          setError(axiosErr.response.data.message);
+        } else {
+          setError(err.message);
+        }
       } else {
         setError("Login failed. Please try again.");
       }
@@ -37,7 +43,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-h-screen flex items-center justify-center px-4  py-20">
+    <div className="h-screen flex items-center justify-center px-4">
       <Card className="w-full max-w-sm p-8 shadow-sm border border-gray-200">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
