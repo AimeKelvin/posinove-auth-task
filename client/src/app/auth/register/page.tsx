@@ -27,7 +27,7 @@ export default function RegisterPage() {
       setError(null);
       await register(name, email, password);
       router.push("/auth/login"); // ✅ redirect to login page
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("❌ Registration error:", err);
       if (err.response?.data?.message) {
         setError(err.response.data.message);

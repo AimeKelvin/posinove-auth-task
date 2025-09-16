@@ -1,18 +1,30 @@
-import jwt from 'jsonwebtoken';
-import env from '../config/env.js';
+import jwt, { SignOptions, JwtPayload } from "jsonwebtoken";
+import env from "../config/env";
 
+// --- Generate Access Token ---
 export function signAccessToken(payload: object): string {
-  return jwt.sign(payload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN });
+  return jwt.sign(
+    payload,
+    env.JWT_SECRET as string,
+    { expiresIn: env.JWT_EXPIRES_IN as string | number } as SignOptions
+  );
 }
 
-export function verifyAccessToken(token: string): any {
-  return jwt.verify(token, env.JWT_SECRET);
-}
-
+// --- Generate Refresh Token ---
 export function signRefreshToken(payload: object): string {
-  return jwt.sign(payload, env.REFRESH_TOKEN_SECRET, { expiresIn: env.REFRESH_TOKEN_EXPIRES_IN });
+  return jwt.sign(
+    payload,
+    env.REFRESH_TOKEN_SECRET as string,
+    { expiresIn: env.REFRESH_TOKEN_EXPIRES_IN as string | number } as SignOptions
+  );
 }
 
-export function verifyRefreshToken(token: string): any {
-  return jwt.verify(token, env.REFRESH_TOKEN_SECRET);
+// --- Verify Access Token ---
+export function verifyAccessToken(token: string): JwtPayload | string {
+  return jwt.verify(token, env.JWT_SECRET as string);
+}
+
+// --- Verify Refresh Token (optional) ---
+export function verifyRefreshToken(token: string): JwtPayload | string {
+  return jwt.verify(token, env.REFRESH_TOKEN_SECRET as string);
 }

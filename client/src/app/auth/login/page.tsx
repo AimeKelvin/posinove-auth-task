@@ -26,7 +26,7 @@ export default function LoginPage() {
       setError(null);
       await login(email, password);
       router.push("/dashboard"); // ✅ redirect to homepage
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("❌ Login error:", err);
       if (err.response?.data?.message) {
         setError(err.response.data.message);

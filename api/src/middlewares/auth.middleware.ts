@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError.js';
-import { verifyAccessToken } from '../services/token.service.js';
+import { verifyAccessToken } from '../services/token.service';
 
 export function authenticate(req: Request, _res: Response, next: NextFunction) {
   try {
