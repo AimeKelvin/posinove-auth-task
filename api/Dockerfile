@@ -1,10 +1,10 @@
-FROM node:20-alpine AS base
+# Build stage
+FROM node:20-alpine AS build
 WORKDIR /app
-ENV NODE_ENV=production
 
-# Install deps with legacy peer deps (ignores eslint peer conflicts)
+# Install ALL deps (including dev) so tsc is available
 COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
-RUN npm ci --omit=dev --legacy-peer-deps || npm ci --legacy-peer-deps
+RUN npm ci --legacy-peer-deps
 
 # Copy source
 COPY tsconfig.json ./
@@ -14,14 +14,16 @@ COPY public ./public
 # Build
 RUN npm run build
 
-# Production image
-FROM node:20-alpine
+# Production stage
+FROM node:20-alpine AS production
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=base /app/package.json ./
-COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/dist ./dist
-COPY --from=base /app/public ./public
+
+# Copy only necessary files from build stage
+COPY --from=build /app/package.json ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/public ./public
 
 EXPOSE 4000
 CMD ["node", "dist/server.js"]
