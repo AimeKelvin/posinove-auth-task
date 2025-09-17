@@ -1,5 +1,5 @@
 import jwt, { SignOptions, JwtPayload } from "jsonwebtoken";
-import env from "../config/env";
+import env from "../config/env.js";
 
 // --- Generate Access Token ---
 export function signAccessToken(payload: object): string {

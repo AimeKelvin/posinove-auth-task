@@ -1,4 +1,4 @@
-import { signAccessToken, signRefreshToken } from './token.service';
+import { signAccessToken, signRefreshToken } from './token.service.js';
 
 export function issueTokens(user: { id: string; email: string }) {
   const accessToken = signAccessToken({ sub: user.id, email: user.email });
