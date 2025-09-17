@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc && mkdir -p dist/docs && cp -r src/docs/* dist/docs/",
     "start": "node dist/server.js",
     "lint": "eslint . --ext .ts",
     "docs": "node --enable-source-maps dist/server.js"

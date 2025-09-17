@@ -1,10 +1,21 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import YAML from 'yamljs';
+import path from "path";
+import fs from "fs";
+import YAML from "yamljs";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+function resolveSwaggerPath(): string {
+  const candidates = [
+    path.join(process.cwd(), "dist", "docs", "openapi.yaml"), // prod build
+    path.join(process.cwd(), "src", "docs", "openapi.yaml"),  // dev/tsx
+    path.join(process.cwd(), "docs", "openapi.yaml"),         // optional root/docs
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return p;
+  }
+  // Fall back to first candidate (helps error messages be consistent)
+  return candidates[0];
+}
 
-export const swaggerDocument = YAML.load(
-  path.join(__dirname, '..', 'docs', 'openapi.yaml')
-);
+const swaggerPath = resolveSwaggerPath();
+const swaggerDocument = YAML.load(swaggerPath);
+
+export default swaggerDocument;
