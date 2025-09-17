@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { Check, X } from "lucide-react";
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -15,11 +16,29 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  // ✅ Password rules
+  const passwordRules = [
+    { label: "At least 8 characters", valid: password.length >= 8 },
+    { label: "Contains an uppercase letter", valid: /[A-Z]/.test(password) },
+    { label: "Contains a number", valid: /\d/.test(password) },
+    {
+      label: "Contains a symbol",
+      valid: /[!@#$%^&*(),.?\":{}|<>]/.test(password),
+    },
+  ];
+
+  const isPasswordValid = passwordRules.every((rule) => rule.valid);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!name || !email || !password) {
       setError("All fields are required.");
+      return;
+    }
+
+    if (!isPasswordValid) {
+      setError("Password does not meet all requirements.");
       return;
     }
 
@@ -71,6 +90,8 @@ export default function RegisterPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+
+          {/* ✅ Password input */}
           <Input
             type="password"
             placeholder="Password"
@@ -78,9 +99,26 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
+          {/* ✅ Password strength checklist */}
+          <ul className="text-sm space-y-1 mt-1">
+            {passwordRules.map((rule, idx) => (
+              <li key={idx} className="flex items-center gap-2">
+                {rule.valid ? (
+                  <Check className="text-green-600 w-4 h-4" />
+                ) : (
+                  <X className="text-red-500 w-4 h-4" />
+                )}
+                <span className={rule.valid ? "text-green-700" : "text-gray-600"}>
+                  {rule.label}
+                </span>
+              </li>
+            ))}
+          </ul>
+
           <Button
             type="submit"
             className="w-full bg-black text-white hover:bg-gray-800 rounded-md py-2"
+            disabled={!isPasswordValid} // ❌ prevent submission until valid
           >
             Sign Up
           </Button>
