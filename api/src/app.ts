@@ -9,7 +9,6 @@ import swaggerUi from 'swagger-ui-express';
 import routes from './routes/index.js';
 import { notFound, errorHandler } from './middlewares/error.middleware.js';
 import env from './config/env.js';
-import swaggerDocument from './config/swagger.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,9 +30,6 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // API routes
 app.use('/api/v1', routes);
-
-// Swagger docs
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Health check
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
