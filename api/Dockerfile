@@ -10,6 +10,7 @@ RUN npm ci --legacy-peer-deps
 COPY tsconfig.json ./
 COPY src ./src
 COPY public ./public
+COPY src/docs ./docs   # ✅ Copy openapi.yaml to /app/docs
 
 # Build
 RUN npm run build
@@ -24,6 +25,7 @@ COPY --from=build /app/package.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/public ./public
+COPY --from=build /app/docs ./docs   # ✅ Include docs in final image
 
 EXPOSE 4000
 CMD ["node", "dist/server.js"]
